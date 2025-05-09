@@ -1,46 +1,39 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   wall.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/09 19:11:10 by rallali           #+#    #+#             */
+/*   Updated: 2025/05/09 23:02:29 by rallali          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "/Users/rallali/Desktop/cuuuuu/include/cub3d.h"
 
-// Calculate and render wall
-void render_wall(t_game *game, int x, double ray_angle, 
-                double ray_dir_x, double ray_dir_y, 
-                int map_x, int map_y, int side, int step_x, int step_y)
+void	render_wall(t_game *game, int x, t_ray *ray, t_dda *dda)
 {
-    // Calculate distance to wall
-    double true_dist;
-    if (side == 0)
-        true_dist = (map_x - game->player.x + (1 - step_x) / 2) / ray_dir_x;
-    else
-        true_dist = (map_y - game->player.y + (1 - step_y) / 2) / ray_dir_y;
-    
-    // Calculate perpendicular wall distance for rendering
-    double perp_wall_dist = true_dist * cos(ray_angle - game->player.angle);
-    
-    // Calculate wall drawing parameters
-    calculate_wall_drawing(game, x, ray_angle, ray_dir_x, ray_dir_y, 
-                          true_dist, perp_wall_dist, side, step_x, step_y);
+	if (dda->side == 0)
+		ray->true_dist = (dda->map_x - game->player.x
+				+ (1 - dda->step_x) / 2) / ray->dir_x;
+	else
+		ray->true_dist = (dda->map_y - game->player.y
+				+ (1 - dda->step_y) / 2) / ray->dir_y;
+	ray->perp_wall_dist = ray->true_dist * cos(ray->angle - game->player.angle);
+	calculate_wall_drawing(game, x, ray, dda);
 }
 
-// Calculate wall drawing parameters
-void calculate_wall_drawing(t_game *game, int x, double ray_angle, 
-                          double ray_dir_x, double ray_dir_y,
-                          double true_dist, double perp_wall_dist, 
-                          int side, int step_x, int step_y)
+void	calculate_wall_drawing(t_game *game, int x, t_ray *ray, t_dda *dda)
 {
-    (void)step_x;  // Unused variable, can be removed if not needed
-    (void)step_y;  // Unused variable, can be removed if not needed
-    (void)ray_angle;  // Unused variable, can be removed if not needed
-    // Calculate height of line to draw on screen
-    int line_height = (int)(SCREEN_HEIGHT / perp_wall_dist);
-    
-    // Calculate lowest and highest pixel to fill in current stripe
-    int draw_start = -line_height / 2 + SCREEN_HEIGHT / 2;
-    if (draw_start < 0)
-        draw_start = 0;
-    int draw_end = line_height / 2 + SCREEN_HEIGHT / 2;
-    if (draw_end >= SCREEN_HEIGHT)
-        draw_end = SCREEN_HEIGHT - 1;
-    
-    // Select texture and calculate texture coordinates
-    select_texture_and_draw(game, x, ray_dir_x, ray_dir_y, true_dist, 
-                           line_height, draw_start, draw_end, side);
+	t_wall	wall;
+
+	wall.line_height = (int)(SCREEN_HEIGHT / ray->perp_wall_dist);
+	wall.draw_start = -wall.line_height / 2 + SCREEN_HEIGHT / 2;
+	if (wall.draw_start < 0)
+		wall.draw_start = 0;
+	wall.draw_end = wall.line_height / 2 + SCREEN_HEIGHT / 2;
+	if (wall.draw_end >= SCREEN_HEIGHT)
+		wall.draw_end = SCREEN_HEIGHT - 1;
+	select_texture_and_draw(game, x, ray, &wall, dda->side);
 }
