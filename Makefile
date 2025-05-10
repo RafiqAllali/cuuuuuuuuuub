@@ -6,6 +6,7 @@ SRCS = \
 	gnl/get_next_line_utils.c \
 	utils/ft_split.c \
 	utils/utils.c \
+	utils/utils2.c \
 	parsing/config_valid.c \
 	parsing/handle_colors.c \
 	parsing/map_utils.c \
@@ -29,6 +30,7 @@ OBJS = main.o \
 	gnl/get_next_line_utils.o \
 	utils/ft_split.o \
 	utils/utils.o \
+	utils/utils2.o \
 	parsing/config_valid.o \
 	parsing/handle_colors.o \
 	parsing/map_utils.o \

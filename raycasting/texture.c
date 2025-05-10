@@ -6,15 +6,17 @@
 /*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 23:34:31 by rallali           #+#    #+#             */
-/*   Updated: 2025/05/09 23:34:33 by rallali          ###   ########.fr       */
+/*   Updated: 2025/05/10 03:32:03 by rallali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "/Users/rallali/Desktop/cuuuuu/include/cub3d.h"
 
-void	select_texture_and_draw(t_game *game, int x, \
-t_ray *ray, t_wall *wall, int side)
+void	select_texture_and_draw(t_game *game, int x, t_ray *ray, t_wall *wall)
 {
+	int	side;
+
+	side = wall->side;
 	if (side == 0)
 	{
 		if (ray->dir_x > 0)
@@ -34,5 +36,5 @@ t_ray *ray, t_wall *wall, int side)
 	else
 		wall->wall_x = game->player.x + ray->true_dist * ray->dir_x;
 	wall->wall_x -= floor(wall->wall_x);
-	draw_textured_line(game, x, wall, ray, side);
+	draw_textured_line(game, x, wall, ray);
 }

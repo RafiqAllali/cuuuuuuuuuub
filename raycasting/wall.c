@@ -6,7 +6,7 @@
 /*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 19:11:10 by rallali           #+#    #+#             */
-/*   Updated: 2025/05/09 23:02:29 by rallali          ###   ########.fr       */
+/*   Updated: 2025/05/10 03:57:59 by rallali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,6 @@ void	calculate_wall_drawing(t_game *game, int x, t_ray *ray, t_dda *dda)
 	wall.draw_end = wall.line_height / 2 + SCREEN_HEIGHT / 2;
 	if (wall.draw_end >= SCREEN_HEIGHT)
 		wall.draw_end = SCREEN_HEIGHT - 1;
-	select_texture_and_draw(game, x, ray, &wall, dda->side);
+	wall.side = dda->side;
+	select_texture_and_draw(game, x, ray, &wall);
 }

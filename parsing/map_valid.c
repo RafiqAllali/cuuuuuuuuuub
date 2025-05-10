@@ -6,7 +6,7 @@
 /*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 17:06:35 by rallali           #+#    #+#             */
-/*   Updated: 2025/05/09 21:53:48 by rallali          ###   ########.fr       */
+/*   Updated: 2025/05/10 04:11:20 by rallali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,4 +81,30 @@ int	validate_player_position(t_map *map)
 		return (1);
 	}
 	return (0);
+}
+
+int	process_line(char *line, t_config *config, int *map_started, int *i)
+{
+	char	*trimmed;
+
+	trimmed = ft_strtrim(line, "\n");
+	free(line);
+	if (*map_started && trimmed[0] == '\0')
+	{
+		free(trimmed);
+		trimmed = ft_strdup(" ");
+	}
+	else if (trimmed[0] == '\0' || trimmed[0] == '#')
+	{
+		free(trimmed);
+		return (0);
+	}
+	if (handle_textures(trimmed, config, map_started))
+		return (free(trimmed), 0);
+	if (handle_colors(trimmed, config, map_started))
+		return (free(trimmed), 0);
+	if (handle_map_line(trimmed, config, map_started, i))
+		return (free(trimmed), 0);
+	write(2, "Error: Invalid line in map file\n", 32);
+	return (free(trimmed), 1);
 }

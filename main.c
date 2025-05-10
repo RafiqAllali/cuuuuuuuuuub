@@ -6,37 +6,11 @@
 /*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 20:05:30 by rallali           #+#    #+#             */
-/*   Updated: 2025/05/09 21:54:11 by rallali          ###   ########.fr       */
+/*   Updated: 2025/05/10 04:09:46 by rallali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "/Users/rallali/Desktop/cuuuuu/include/cub3d.h"
-
-static int	process_line(char *line, t_config *config, int *map_started, int *i)
-{
-	char	*trimmed;
-
-	trimmed = ft_strtrim(line, "\n");
-	free(line);
-	if (*map_started && trimmed[0] == '\0')
-	{
-		free(trimmed);
-		trimmed = ft_strdup(" ");
-	}
-	else if (trimmed[0] == '\0' || trimmed[0] == '#')
-	{
-		free(trimmed);
-		return (0);
-	}
-	if (handle_textures(trimmed, config, map_started))
-		return (free(trimmed), 0);
-	if (handle_colors(trimmed, config, map_started))
-		return (free(trimmed), 0);
-	if (handle_map_line(trimmed, config, map_started, i))
-		return (free(trimmed), 0);
-	write(2, "Error: Invalid line in map file\n", 32);
-	return (free(trimmed), 1);
-}
 
 void	read_map(int fd, t_config *config)
 {

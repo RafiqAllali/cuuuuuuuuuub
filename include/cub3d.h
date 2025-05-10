@@ -6,11 +6,9 @@
 /*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 17:05:56 by rallali           #+#    #+#             */
-/*   Updated: 2025/05/09 21:52:43 by rallali          ###   ########.fr       */
+/*   Updated: 2025/05/10 04:13:33 by rallali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-
 
 #ifndef CUB3D_H
 # define CUB3D_H
@@ -99,6 +97,69 @@ typedef struct s_game
 	uint32_t		floor_color;
 	uint32_t		ceiling_color;
 }	t_game;
+// Add these structures to your cub3d.h file
+
+// Ray information
+typedef struct s_ray
+{
+	double	angle;
+	double	dir_x;
+	double	dir_y;
+	double	true_dist;
+	double	perp_wall_dist;
+}	t_ray;
+
+// DDA algorithm data
+typedef struct s_dda
+{
+	int		map_x;
+	int		map_y;
+	int		step_x;
+	int		step_y;
+	int		hit;
+	int		side;
+	double	side_dist_x;
+	double	side_dist_y;
+	double	delta_dist_x;
+	double	delta_dist_y;
+}	t_dda;
+
+// Wall drawing data
+typedef struct s_wall
+{
+	int		line_height;
+	int		draw_start;
+	int		draw_end;
+	int		tex_num;
+	int		tex_x;
+	int		tex_width;
+	int		tex_height;
+	double	wall_x;
+	int		side;
+}	t_wall;
+
+typedef struct s_vertical_line
+{
+	uint32_t	*pixels;
+	double		step;
+	double		tex_pos;
+	int			y;
+	int			tex_y;
+	uint32_t	color;
+}	t_vertical_line;
+
+// Update these function prototypes
+void	select_texture_and_draw(t_game *game, int x, t_ray *ray, t_wall *wall);
+void	draw_textured_line(t_game *game, int x, t_wall *wall, t_ray *ray);
+void	draw_vertical_line(t_game *game, int x, t_wall *wall);
+void	render_wall(t_game *game, int x, t_ray *ray, t_dda *dda);
+void	calculate_wall_drawing(t_game *game, int x, t_ray *ray, t_dda *dda);
+
+// Additional prototypes for DDA
+void	init_dda_params(t_dda *dda, t_ray *ray);
+void	setup_dda(t_game *game, t_dda *dda, t_ray *ray);
+void	perform_dda(t_game *game, t_dda *dda);
+void	cast_single_ray(t_game *game, int x, double ray_angle);
 
 // get_next_line functions
 char	*get_next_line(int fd);
@@ -160,33 +221,49 @@ void	draw_ceiling_floor(t_game *game);
 void	cast_rays(t_game *game);
 void	normalize_angle(double *angle);
 void	cast_single_ray(t_game *game, int x, double ray_angle);
-void	setup_dda(t_game *game, double *side_dist_x, double *side_dist_y,
-			int *step_x, int *step_y, double ray_dir_x, double ray_dir_y,
-			int map_x, int map_y);
-void	perform_dda(t_game *game, int *hit, int *side, int *map_x, int *map_y,
-			double *side_dist_x, double *side_dist_y,
-			double delta_dist_x, double delta_dist_y,
-			int step_x, int step_y);
-void	render_wall(t_game *game, int x, double ray_angle,
-			double ray_dir_x, double ray_dir_y,
-			int map_x, int map_y, int side, int step_x, int step_y);
-void	calculate_wall_drawing(t_game *game, int x, double ray_angle,
-			double ray_dir_x, double ray_dir_y,
-			double true_dist, double perp_wall_dist,
-			int side, int step_x, int step_y);
-void	select_texture_and_draw(t_game *game, int x, double ray_dir_x,
-			double ray_dir_y, double true_dist, int line_height,
-			int draw_start, int draw_end, int side);
-void	draw_textured_line(t_game *game, int x, int tex_num, double wall_x,
-			int side, double ray_dir_x, double ray_dir_y,
-			int line_height, int draw_start, int draw_end);
-void	draw_vertical_line(t_game *game, int x, int tex_num, int tex_x,
-			int tex_width, int tex_height,
-			int line_height, int draw_start, int draw_end);
+// void	setup_dda(t_game *game, double *side_dist_x, double *side_dist_y,
+// 			int *step_x, int *step_y, double ray_dir_x, double ray_dir_y,
+// 			int map_x, int map_y);
+// void	perform_dda(t_game *game, int *hit, int *side, int *map_x, int *map_y,
+// 			double *side_dist_x, double *side_dist_y,
+// 			double delta_dist_x, double delta_dist_y,
+// 			int step_x, int step_y);
+// void	render_wall(t_game *game, int x, double ray_angle,
+// 			double ray_dir_x, double ray_dir_y,
+// 			int map_x, int map_y, int side, int step_x, int step_y);
+// void	calculate_wall_drawing(t_game *game, int x, double ray_angle,
+// 			double ray_dir_x, double ray_dir_y,
+// 			double true_dist, double perp_wall_dist,
+// 			int side, int step_x, int step_y);
+// void	select_texture_and_draw(t_game *game, int x, double ray_dir_x,
+// 			double ray_dir_y, double true_dist, int line_height,
+// 			int draw_start, int draw_end, int side);
+// void	draw_textured_line(t_game *game, int x, int tex_num, double wall_x,
+// 			int side, double ray_dir_x, double ray_dir_y,
+// 			int line_height, int draw_start, int draw_end);
+// void	draw_vertical_line(t_game *game, int x, int tex_num, int tex_x,
+// 			int tex_width, int tex_height,
+// 			int line_height, int draw_start, int draw_end);
 
 // Game setup and cleanup
 void	setup_and_run_game(t_game *game);
 void	cleanup_game(t_game *game);
-void	*ft_malloc(size_t size);
+// void	*ft_malloc(size_t size);
 
+// Replace the following function declarations in include/cub3d.h
+
+// // DDA functions
+void	init_dda_params(t_dda *dda, t_ray *ray);
+void	setup_dda(t_game *game, t_dda *dda, t_ray *ray);
+void	perform_dda(t_game *game, t_dda *dda);
+
+// // Raycasting functions
+// void	cast_rays(t_game *game);
+// void	cast_single_ray(t_game *game, int x, double ray_angle);
+// void	normalize_angle(double *angle);
+
+// // Wall and rendering functions
+void	render_wall(t_game *game, int x, t_ray *ray, t_dda *dda);
+void	calculate_wall_drawing(t_game *game, int x, t_ray *ray, t_dda *dda);
+int		process_line(char *line, t_config *config, int *map_started, int *i);
 #endif
